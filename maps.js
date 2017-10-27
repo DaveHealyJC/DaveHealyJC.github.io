@@ -7,7 +7,6 @@ var resumeBool=true;
 var wgbBool=true;
 var timeInterval;
 var timeBool=false;
-var globalImgInd=0;
 var totalSpaces;
 var totalTurns;
 var timerStartBool=false;
@@ -25,58 +24,7 @@ function dispTime(){
             timerDisp.innerHTML=minutes+":"+seconds;   
         }
 
-var imgArray=  [{src:"messages/intro_0.jpg",l:0,r:1,ret:0,end:0},
-                {src:"messages/intro_1.jpg",l:1,r:1,ret:0,end:0},
-                {src:"messages/intro_2.jpg",l:1,r:1,ret:0,end:0},
-                {src:"messages/intro_3.jpg",l:0,r:0,ret:1,end:0},
-                {src:"messages/maze_0.jpg",l:0,r:0,ret:1,end:0},
-                {src:"messages/road_0.jpg",l:0,r:0,ret:1,end:0},
-                {src:"messages/WGB_0.jpg",l:0,r:0,ret:1,end:0},
-                {src:"messages/end.jpg",l:0,r:0,ret:0,end:1},
-                {src:"messages/road_hint.jpg",l:0,r:0,ret:1,end:0}
-
-                ];
-
-function imgDisp(imgSrc,context,canvas,timeBool){
-    if(timeBool){
-        clearInterval(timeInterval);
-    }
-    resumeBool=false
-    var img = new Image();
-    img.src = imgSrc;
-    img.onload = function(){        
-    context.drawImage(img,125,75);                
-    };
-}
-
-
-function clickCoords(buttons, x, y) {
-    console.log("in coords")
-    console.log("buttons arr is: ",buttons)
-    var buttonClicked = false;
-    for (var iClick=0;iClick<buttons.length; iClick++) {
-        var left = buttons[iClick].x 
-        var right = buttons[iClick].x+buttons[iClick].w;
-        var top = buttons[iClick].y 
-        var bottom = buttons[iClick].y+buttons[iClick].h;
-        if (right >= x && left <= x && bottom >= y && top <= y) {
-            buttonClicked = buttons[iClick];
-        }
-    }
-    return buttonClicked;
-}
-
-
-    // fill buttons array with appropriate objects
     
-               
-
-
-
-    
-
-
-
 
 
 
@@ -447,8 +395,6 @@ var towerRoom=[
                 room=mazeRoom;
                 gameSizeJ=room[0].map.length;
                 gameSizeI=room[0].map[0].length;
-                globalImgInd=4;
-                imgDisp(imgArray[4].src,context,canvas,timeBool)
             }
             return
         }
@@ -550,8 +496,6 @@ var towerRoom=[
                 room=anteRoom;
                 gameSizeJ=room[0].map.length;
                 gameSizeI=room[0].map[0].length;
-                globalImgInd=5;
-                imgDisp(imgArray[5].src,context,canvas,timeBool)
             }
             return
         }
@@ -604,8 +548,6 @@ var towerRoom=[
             }
             if(w===1 && wgbBool){
                 wgbBool=false
-                globalImgInd=6;
-                imgDisp(imgArray[6].src,context,canvas,timeBool)
             }
             return
         }

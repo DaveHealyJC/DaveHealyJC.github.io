@@ -78,62 +78,8 @@
         mapContext = mapCanvas.getContext('2d');
         mapContext.fillStyle = 'black';
         context.lineWidth=1;
-        timerDisp = document.querySelector('.timer');
-        timerDisp.style.color='red';  
         floorBranch(keysPressed,resumeBool)
-        imgDisp(imgArray[0].src,context,canvas,timeBool)
         playInterval=setInterval(function(){floorBranch(keysPressed,resumeBool)}, 33);
-        canvas.addEventListener('click', function(e) {
-            if(resumeBool===false){
-                var l=imgArray[globalImgInd].l;
-                var r=imgArray[globalImgInd].r;
-                var ret=imgArray[globalImgInd].ret;
-                var end=imgArray[globalImgInd].end;
-                var buttons = [];
-                if (l===1){
-                    buttons.push({x: 355+125, y: 311+75, w: 53, h: 53, bId:'l'});
-                }
-                if(r===1){
-                    buttons.push({x: 420+125, y: 311+75, w: 53, h: 53, bId:'r'});
-                }
-                if(ret===1){
-                    buttons.push({x: 386+125, y: 262+75, w: 93, h: 53, bId:'ret'});
-                    buttons.push({x: 415+125, y: 262+75, w: 65, h: 105, bId:'ret'});
-                }
-                if(end===1){
-                    buttons.push({x: 190+125, y: 325+75, w: 210, h: 60, bId:'end'});
-                }
-
-                var buttonCheck = clickCoords(buttons, e.offsetX, e.offsetY);
-                if (buttonCheck) {
-                    if(buttonCheck.bId==='r'){
-                        globalImgInd++;
-                        imgDisp(imgArray[globalImgInd].src,context,canvas,timeBool);
-                        //imgCycle(imgArray[imgIndex+1].src,imgIndex+1,imgArray[imgIndex+1].l,imgArray[imgIndex+1].r,imgArray[imgIndex+1].ret,context,canvas)
-                    }
-                    if(buttonCheck.bId==='l'){
-                        globalImgInd--;
-                        imgDisp(imgArray[globalImgInd].src,context,canvas,timeBool);
-                    }
-                    if(buttonCheck.bId==='ret'){
-                        resumeBool=true;
-                        if (room!==gateRoom){
-                            timeBool=true;
-                            timeInterval=setInterval(function(){dispTime()}, 1000);
-                        }
-                        //setInterval(floorBranch(keysPressed), 33);
-                    }
-                    if(buttonCheck.bId==='end'){
-                        var canSect = document.querySelector('#game'); //fixthis
-                        canSect.style.display='none';
-                        var mapEle = document.querySelector('#map');
-                        mapEle.style.display='none';
-                        htmlInfo()
-                    }
-                } 
-            }
-    }, false);
-
 
 
 
@@ -167,43 +113,6 @@
 
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
-        if(fadeBool===true){
-            fadeCount=(fadeCount+1)%2
-            if (fadeCount===0){
-                if (fadePerc>0){
-                    fadePerc--;
-                }
-                else if(fadePerc===0){
-                    var request;    
-                    clearInterval(playInterval);     
-                    var username = document.querySelector('.username');         
-                    var url = 'score.py?score='+timerDisp.innerHTML+'&username='+username.innerHTML+'&spaces='+totalSpaces+'&turns='+totalTurns;
-                    request = new XMLHttpRequest();
-                    request.addEventListener('readystatechange', handle_response, false);
-                    request.open('GET', url, true);
-                    request.send(null);
-
-                        
-                    function handle_response() {
-                        if ( request.readyState === 4 ) {
-                            if ( request.status === 200 ) {
-                                if ( request.responseText.trim() !== 'error' ) {
-                                    str=request.responseText.trim()
-                                    res=str.split(" ");
-                                }
-                            }
-                        }
-                    }
-
-
-
-
-
-                    globalImgInd=7
-                    imgDisp(imgArray[7].src,context,canvas,timeBool)
-                }
-            }
-        }
         if (resumeBool){
         if (key.length===0){
             globalCon=false;
@@ -358,9 +267,6 @@
             p.pos=[p.y,p.x];
         }
 
-        if (inArray(72,keysPressed,'sing') && room===anteRoom){
-            imgDisp(imgArray[8].src,context,canvas,timeBool)
-        }
 
         if (inArray(76,keysPressed,'sing')){
             if (room===mazeRoom && (p.elevation===0 || p.elevation===1)){
@@ -390,9 +296,6 @@
             }
         }
 
-        if(p.elevation===4 && p.pos[0]<6){
-            fadeBool=true
-        }
 
 		
 
