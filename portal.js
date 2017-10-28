@@ -1193,7 +1193,7 @@
         //
         mapContext.strokeStyle = 'red';
         mapContext.beginPath();
-        mapContext.moveTo((p.pos[1]+100/gameSizeI*Math.cos(p.dir))*150/gameSizeI,(p.pos[0]-100/gameSizeI*Math.sin(p.dir))*150/gameSizeJ);
+        mapContext.moveTo((p.pos[1]+1000/gameSizeI*Math.cos(p.dir))*150/gameSizeI,(p.pos[0]-1000/gameSizeI*Math.sin(p.dir))*150/gameSizeJ);
         mapContext.lineTo((p.pos[1])*150/gameSizeI,(p.pos[0])*150/gameSizeJ);
         mapContext.closePath();
         mapContext.stroke();
