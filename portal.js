@@ -379,7 +379,7 @@
         var intPts=pointAhead();
         OP(p.slope);
         OP(intPts);
-        for (var intIter=0;intIter<intPts.size();intPts++){
+        for (var intIter=0;intIter<intPts.length;intPts++){
             room[elevation].map[Math.floor(p.y)][Math.floor(p.x)]
         }
 
