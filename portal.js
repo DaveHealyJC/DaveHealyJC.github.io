@@ -994,6 +994,7 @@
         //y-p.y=p.slope*(x-p.x)
         //y=p.slope*(x-p.x)+p.y
         //x=p.x+((y-p.y)/p.slope)
+        /*
         intPts=[];
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
@@ -1002,17 +1003,18 @@
                 intPts.push([yInt,iInt]);
             }
         }
-        /*
+        */
+        
         for(var jInt=0;jInt<gameSizeJ;jInt++){
             //y=mx+c
             //mx=y-c
             //x=(y-c)/m
-            xInt=p.x+((jInt-p.y)/p.slope);
+            xInt=p.x+((jInt-p.y)/-p.slope);
             if(xInt>0 && xInt<gameSizeI){
                 intPts.push([gameSizeJ-jInt,xInt]);
             }
         }
-        */
+        
         return intPts;
     }
 
