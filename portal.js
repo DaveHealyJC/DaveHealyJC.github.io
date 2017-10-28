@@ -988,11 +988,14 @@
         var yInt;
         var xInt;
         //y=mx+c
+        //y-p.y=p.slope*(x-p.x)
+        //y=p.slope*(x-p.x)+p.y
+        //x=p.x+((y-p.y)/p.slope)
         var c = -p.slope*(p.x);
         intPts=[];
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
-            yInt=p.slope*(iInt)+c;
+            yInt=p.slope*(iInt-p.x)+p.y
             if(yInt>0 && yInt<gameSizeJ){
                 intPts.push([yInt,gameSizeI-iInt]);
             }
@@ -1001,7 +1004,7 @@
             //y=mx+c
             //mx=y-c
             //x=(y-c)/m
-            xInt=(jInt-c)/p.slope;
+            xInt=p.x+((y-p.y)/p.slope);
             if(xInt>0 && xInt<gameSizeI){
                 intPts.push([gameSizeJ-jInt,xInt]);
             }
