@@ -376,9 +376,12 @@
 		}
     }
 
-    var intPts=pointAhead();
-    OP(p.slope);
-    OP(intPts);
+        var intPts=pointAhead();
+        OP(p.slope);
+        OP(intPts);
+        for (var intIter=0;intIter<intPts.size();intPts++){
+            room[elevation].map[Math.floor(p.y)][Math.floor(p.x)]
+        }
 
     }
 
@@ -996,7 +999,7 @@
         //y=p.slope*(x-p.x)+p.y
         //x=p.x+((y-p.y)/p.slope)
         intPts=[];
-        /*
+        
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
             yInt=-p.slope*(iInt-p.x)+p.y
@@ -1004,8 +1007,18 @@
                 intPts.push([yInt,iInt]);
             }
         }
-        */
+        for(var iInt=Math.floor(p.x);iInt>0;iInt--){
+            //y=m(iInt)+c
+            yInt=-p.slope*(iInt-p.x)+p.y
+            if(yInt>=0 && yInt<gameSizeJ){
+                intPts.push([yInt,iInt]);
+            }
+            if(room[elevation].map[yInt][iInt]==1){
+                OP('Intersecting at ['+yInt+']['+iInt+']');
+            }
+        }
         
+        /*
         for(var jInt=0;jInt<gameSizeJ;jInt++){
             //y=mx+c
             //mx=y-c
@@ -1015,7 +1028,7 @@
                 intPts.push([gameSizeJ-jInt,xInt]);
             }
         }
-        
+        */
         return intPts;
     }
 
