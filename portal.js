@@ -993,14 +993,18 @@
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
             yInt=p.slope*(iInt)+c;
-            intPts.push([yInt,iInt]);
+            if(yInt>0 && yInt<gameSizeJ){
+                intPts.push([jInt,xInt]);
+            }
         }
         for(var jInt=0;jInt<gameSizeJ;jInt++){
             //y=mx+c
             //mx=y-c
             //x=(y-c)/m
             xInt=(jInt-c)/p.slope;
-            intPts.push([jInt,xInt]);
+            if(xInt>0 && xInt<gameSizeI){
+                intPts.push([jInt,xInt]);
+            }
         }
         return intPts;
     }
