@@ -192,7 +192,7 @@
         if((toDegrees(p.dir)%90)<0.5 || (toDegrees(p.dir)%90)>89.5){
             p.dir=toRadians(toDegrees(p.dir)+1);
         }
-        p.slope=math.tan(p.dir)
+        p.slope=Math.tan(p.dir)
 
 
 
