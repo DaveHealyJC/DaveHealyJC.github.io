@@ -1013,9 +1013,9 @@
             if(yInt>=0 && yInt<gameSizeJ){
                 intPts.push([yInt,iInt]);
             }
-            if(room[p.elevation].map[yInt][iInt]==1){
-                OP('Intersecting at ['+yInt+']['+iInt+']');
-            }
+            //if(room[p.elevation].map[yInt][iInt]==1){
+            //    OP('Intersecting at ['+yInt+']['+iInt+']');
+            //}
         }
         
         /*
