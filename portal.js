@@ -113,6 +113,7 @@
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
         var intPts=pointAhead();
+        OP(p.slope)
         OP(intPts);
         if (resumeBool){
         if (key.length===0){
@@ -1212,6 +1213,7 @@
         for (y = 0; y < gameSizeJ; y++) {
             for (x = 0; x < gameSizeI; x++) {
                 mapContext.rect(x*150/gameSizeI, y*150/gameSizeJ, 150/gameSizeI, 150/gameSizeJ);
+                mapContext.stroke();
                
            }
 
