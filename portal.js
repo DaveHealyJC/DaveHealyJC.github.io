@@ -992,7 +992,7 @@
         intPts=[];
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
-            yInt=p.slope(iInt)+c;
+            yInt=p.slope*(iInt)+c;
             intPts.push([yInt,iInt]);
         }
         for(var jInt=0;jInt<gameSizeJ;jInt++){
