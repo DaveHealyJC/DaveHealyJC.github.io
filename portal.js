@@ -1191,6 +1191,7 @@
         mapContext.closePath();
         mapContext.stroke();
         //
+        mapContext.lineWidth=1;
         mapContext.strokeStyle = 'red';
         mapContext.beginPath();
         mapContext.moveTo((p.pos[1]+1000/gameSizeI*Math.cos(p.dir))*150/gameSizeI,(p.pos[0]-1000/gameSizeI*Math.sin(p.dir))*150/gameSizeJ);
@@ -1206,6 +1207,15 @@
         mapContext.fill();
         mapContext.stroke();
         mapContext.fillStyle = 'black';
+
+        mapContext.strokeStyle = 'red';
+        for (y = 0; y < gameSizeJ; y++) {
+            for (x = 0; x < gameSizeI; x++) {
+                mapContext.rect(x*150/gameSizeI, y*150/gameSizeJ, 150/gameSizeI, 150/gameSizeJ);
+               
+           }
+
+        }
     }
 
 
