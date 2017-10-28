@@ -999,7 +999,7 @@
             //y=mx+c
             //mx=y-c
             //x=(y-c)/m
-            xInt=(jInt-c)/m;
+            xInt=(jInt-c)/p.slope;
             intPts.push([jInt,xInt]);
         }
         return intPts;
