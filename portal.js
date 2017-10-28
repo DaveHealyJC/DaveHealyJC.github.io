@@ -112,6 +112,16 @@
     function floorBranch(key,resumeBool){
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
+
+        var intPts=pointAhead();
+        OP(p.slope);
+        OP(intPts);
+        for(var intIter=0;intIter<intPts.length;intIter++){
+            if(room[pElev].map[intPts[intIter][0]][intPts[intIter][1]]==1){
+                    OP('Intersecting at ['+intPts[intIter][0]+']['+intPts[intIter][1]+']');
+            }
+        }
+
         if (resumeBool){
         if (key.length===0){
             globalCon=false;
@@ -375,15 +385,6 @@
             updateMap(room[Math.floor(p.elevation)].map);
 		}
     }
-
-        var intPts=pointAhead();
-        OP(p.slope);
-        OP(intPts);
-        for(var intIter=0;intIter<intPts.length;intIter++){
-            if(room[p.elevation].map[intPts[intIter][0]][intPts[intIter][1]]==1){
-                    OP('Intersecting at ['+intPts[intIter][0]+']['+intPts[intIter][1]+']');
-            }
-        }
 
 
     }
