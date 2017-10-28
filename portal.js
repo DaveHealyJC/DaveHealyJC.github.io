@@ -379,6 +379,12 @@
         var intPts=pointAhead();
         OP(p.slope);
         OP(intPts);
+        for(var intIter=0;intIter<intPts.length;intIter++){
+            if(room[p.elevation].map[intPts[intIter][0]][intPts[intIter][1]]==1){
+                    OP('Intersecting at ['+intPts[intIter][0]+']['+intPts[intIter][1]+']');
+            }
+        }
+
 
     }
 
@@ -1010,9 +1016,6 @@
             if(yInt>=0 && yInt<gameSizeJ){
                 intPts.push([yInt,iInt]);
             }
-            //if(room[p.elevation].map[yInt][iInt]==1){
-            //    OP('Intersecting at ['+yInt+']['+iInt+']');
-            //}
         }
         
         /*
