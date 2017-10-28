@@ -122,8 +122,10 @@
             OP(room[pElev].map)
             OP(intPts[intIter][0])
             OP(intPts[intIter][1])
-            OP(room[pElev].map[intPts[intIter][0]][intPts[intIter][1]])
-            if(room[pElev].map[intPts[intIter][0]][intPts[intIter][1]]==1){
+            OP('new')
+            OP(room[pElev].map[0][0])
+            OP(room[pElev].map[Math.floor(intPts[intIter][0])][Math.floor(intPts[intIter][1])])
+            if(room[pElev].map[Math.floor(intPts[intIter][0])][Math.floor(intPts[intIter][1])]==1){
                     OP('Intersecting at ['+intPts[intIter][0]+']['+intPts[intIter][1]+']');
             }
         }
