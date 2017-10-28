@@ -997,7 +997,7 @@
             //y=m(iInt)+c
             yInt=p.slope*(iInt-p.x)+p.y
             if(yInt>0 && yInt<gameSizeJ){
-                intPts.push([yInt,gameSizeI-iInt]);
+                intPts.push([yInt,iInt]);
             }
         }
         for(var jInt=0;jInt<gameSizeJ;jInt++){
