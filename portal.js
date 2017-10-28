@@ -1004,7 +1004,7 @@
             //y=mx+c
             //mx=y-c
             //x=(y-c)/m
-            xInt=p.x+((y-p.y)/p.slope);
+            xInt=p.x+((jInt-p.y)/p.slope);
             if(xInt>0 && xInt<gameSizeI){
                 intPts.push([gameSizeJ-jInt,xInt]);
             }
