@@ -110,6 +110,11 @@
 
 
     function floorBranch(key,resumeBool){
+        OP('dir')
+        OP(p.dir)
+        OP('angle')
+        OP(p.dir*(180/Math.PI))
+        OP('slope')
         OP(Math.tan(p.dir*(180/Math.PI)))
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
