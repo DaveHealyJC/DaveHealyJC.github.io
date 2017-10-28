@@ -110,14 +110,10 @@
 
 
     function floorBranch(key,resumeBool){
-        OP('dir')
-        OP(p.dir)
-        OP('angle')
-        OP(p.dir*(180/Math.PI))
-        OP('slope-rad')
-        OP(Math.tan(p.dir))
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
+        var intPts=pointAhead();
+        OP(intPts);
         if (resumeBool){
         if (key.length===0){
             globalCon=false;
@@ -196,6 +192,7 @@
         if((toDegrees(p.dir)%90)<0.5 || (toDegrees(p.dir)%90)>89.5){
             p.dir=toRadians(toDegrees(p.dir)+1);
         }
+        p.slope=math.tan(p.dir)
 
 
 
@@ -988,11 +985,24 @@
     }
 
     function pointAhead(){
-        y=mx+c
-        intPts=[]
+        var yInt;
+        var xInt;
+        //y=mx+c
+        var c = -p.slope*(p.x);
+        intPts=[];
         for(var iInt=0;iInt<gameSizeI;iInt++){
-
+            //y=m(iInt)+c
+            yInt=p.slope(iInt)+c;
+            intPts.push([yInt,iInt]);
         }
+        for(var jInt=0;jInt<gameSizeJ;jInt++){
+            //y=mx+c
+            //mx=y-c
+            //x=(y-c)/m
+            xInt=(jInt-c)/m;
+            intPts.push([jInt,xInt]);
+        }
+        return intPts;
     }
 
     //Math.tan(p.dir*(180/Math.PI))
