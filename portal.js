@@ -994,8 +994,8 @@
         //y-p.y=p.slope*(x-p.x)
         //y=p.slope*(x-p.x)+p.y
         //x=p.x+((y-p.y)/p.slope)
-        /*
         intPts=[];
+        /*
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
             yInt=-p.slope*(iInt-p.x)+p.y
