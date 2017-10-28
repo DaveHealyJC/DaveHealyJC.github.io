@@ -1267,10 +1267,7 @@ function mazeGen(){
     totalSpaces=0;
     totalTurns=0;
     mazeRec(pos,maze)
-    console.log("spaces")
-    console.log(totalSpaces)
-    console.log("turns")
-    console.log(totalTurns)
+
 
     var mazeR=randNum(0,1)
     var mazeExit = [0,0]
@@ -1295,7 +1292,6 @@ function mazeGen(){
     }
 
 
-    console.log(maze)
     for(var jMaze=3;jMaze<maze[0].length-1;jMaze++){
         for(var iMaze=3;iMaze<maze[0].length-1;iMaze++){
             mazeRoom[0].map[jMaze][iMaze]=maze[jMaze-1][iMaze-1]

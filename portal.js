@@ -110,7 +110,7 @@
 
 
     function floorBranch(key,resumeBool){
-        OP(p.dir)
+        OP(Math.tan(p.dir*(180/Math.PI)))
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
         if (resumeBool){
@@ -981,28 +981,17 @@
         }
         return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang')<= Math.PI/4
     }
-/*
+
     function pointAhead(){
-        var angHold
-        if (typeof point==='object'){
-            point=angleAround(point)+Math.PI*2
+        y=mx+c
+        intPts=[]
+        for(var iInt=0;iInt<gameSizeI;iInt++){
+
         }
-        if(side==='left'){
-            sideMod=Math.PI/4
-        }
-        else if(side==='right'){
-            sideMod=-Math.PI/4
-        }
-        else{
-            sideMod=0
-        }
-        angHold=Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)
-        if(Math.abs(angHold)>1){
-            return true
-        }
-        return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang')<= Math.PI/4
     }
-*/
+
+    //Math.tan(p.dir*(180/Math.PI))
+
     //funcornerLineCoords
     function cornerLineCoords(point,fDist,floorArg){
         var center=p.pos
