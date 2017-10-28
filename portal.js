@@ -996,10 +996,11 @@
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
             yInt=p.slope*(iInt-p.x)+p.y
-            if(yInt>0 && yInt<gameSizeJ){
+            if(yInt>=0 && yInt<gameSizeJ){
                 intPts.push([yInt,iInt]);
             }
         }
+        /*
         for(var jInt=0;jInt<gameSizeJ;jInt++){
             //y=mx+c
             //mx=y-c
@@ -1009,6 +1010,7 @@
                 intPts.push([gameSizeJ-jInt,xInt]);
             }
         }
+        */
         return intPts;
     }
 
@@ -1188,6 +1190,14 @@
         mapContext.lineTo((p.pos[1]+100/gameSizeI*Math.cos(p.dir-Math.PI/7))*150/gameSizeI,(p.pos[0]-100/gameSizeI*Math.sin(p.dir-Math.PI/7))*150/gameSizeJ);
         mapContext.closePath();
         mapContext.stroke();
+        //
+        mapContext.strokeStyle = 'red';
+        mapContext.beginPath();
+        mapContext.moveTo((p.pos[1]+100/gameSizeI*Math.cos(p.dir))*150/gameSizeI,(p.pos[0]-100/gameSizeI*Math.sin(p.dir))*150/gameSizeJ);
+        mapContext.lineTo((p.pos[1])*150/gameSizeI,(p.pos[0])*150/gameSizeJ);
+        mapContext.closePath();
+        mapContext.stroke();
+        //
         mapContext.lineWidth=1;
         mapContext.fillStyle = 'orange';
         mapContext.strokeStyle = 'black';
