@@ -115,7 +115,7 @@
         OP('angle')
         OP(p.dir*(180/Math.PI))
         OP('slope')
-        OP(Math.tan(p.dir*(180/Math.PI)))
+        OP(Math.atan(p.dir*(180/Math.PI)))
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
         if (resumeBool){
