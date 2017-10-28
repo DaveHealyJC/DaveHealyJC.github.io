@@ -112,9 +112,6 @@
     function floorBranch(key,resumeBool){
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
-        var intPts=pointAhead();
-        OP(p.slope)
-        OP(intPts);
         if (resumeBool){
         if (key.length===0){
             globalCon=false;
@@ -378,6 +375,10 @@
             updateMap(room[Math.floor(p.elevation)].map);
 		}
     }
+
+    var intPts=pointAhead();
+    OP(p.slope)
+    OP(intPts);
 
     }
 
