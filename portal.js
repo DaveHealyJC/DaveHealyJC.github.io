@@ -110,7 +110,7 @@
 
 
     function floorBranch(key,resumeBool){
-
+        OP(p.dir)
         //executed every 33ms. sets new position and direction and then calls the draw function
         //for each floor
         if (resumeBool){
@@ -121,9 +121,6 @@
             globalCon=true;
         }
 
-        OP("#######################################")
-        //OP(p.pos)
-        //OP(p.dir)
         pElev=Math.floor(p.elevation);
         room[pElev].warp(p.pos,pElev);
         pElev=Math.floor(p.elevation);
