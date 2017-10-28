@@ -989,14 +989,15 @@
         var yInt;
         var xInt;
         //y=mx+c
+        //y-y1=m(x-x1)
+        //
         //y-p.y=p.slope*(x-p.x)
         //y=p.slope*(x-p.x)+p.y
         //x=p.x+((y-p.y)/p.slope)
-        var c = -p.slope*(p.x);
         intPts=[];
         for(var iInt=0;iInt<gameSizeI;iInt++){
             //y=m(iInt)+c
-            yInt=p.slope*(iInt-p.x)+p.y
+            yInt=-p.slope*(iInt-p.x)+p.y
             if(yInt>=0 && yInt<gameSizeJ){
                 intPts.push([yInt,iInt]);
             }
