@@ -313,8 +313,8 @@
         //not know that the screen has simply been cleared as they will believe that they only see white because the 
         //wall is filling the screen.
         //when closeFlag is true, the other drawing functions will be skipped
-		var slopeLeft=-(Math.tan(modAr(p.dir+Math.PI/4)));
-		var slopeRight=-(Math.tan(modAr(p.dir-Math.PI/4)));
+		var slopeLeft=-(Math.tan(modAr(p.dir+Math.PI/8)));
+		var slopeRight=-(Math.tan(modAr(p.dir-Math.PI/8)));
         if(p.dir>=Math.PI/4 && p.dir<3*Math.PI/4 && floor[Math.floor(p.y)-1][Math.floor(p.x)]===0){
 			xInt0=(Math.floor(p.y)-p.y)/slopeLeft+p.x;
 			xInt0=trigCorrect(xInt0);
