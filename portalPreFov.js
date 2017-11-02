@@ -1,10 +1,9 @@
-//walls close to you on side disappear when fov is altered
-//brief disappearance of walls:
-//              0 b 0 0 o
-//              0 p->(facing right, strafing up through blue)  
-//              0
-//              0
-//              0
+//notepad
+
+//end button (play again)
+
+//comment out cgitb.enable when done
+
 
 
 (function() {
@@ -29,9 +28,9 @@
     var fadePerc=100
     var fadeCount=0
     var fov = Math.PI/4
-    var portGeo = false
-    var geo=0
-    var fov1
+    var geo=false
+    var dirGeo
+    var fovGeo
 
     //The following object contains information about the different types of blocks and methods which take point
     //modifiers as inputs while the player is moving and return true or false depending on what type of block it is
@@ -406,6 +405,7 @@
 				closeFlag=true;
 			}
 		}
+        
 	
 
 
@@ -427,15 +427,13 @@
 		}
     }
             //geodebug
-            //portGeo bool: hide close walls (350ish)
-            //              //ramps 165ish
             //y2-y1/x2-x1
-            if(portB.lines.length!=0 && portO.lines.length!=0){
+            if(portB.lines.length!=0 && portO.lines.length!=0 && ((pointVisible(portB.lines[0]) ||pointVisible(portB.lines[1])) || closeFlag ) ){
                 var ang1 = angleAround(portB.lines[0]);
                 var ang2 = angleAround(portB.lines[1]);
-                var dirTmp= (ang1+ang2)/2;
+                dirGeo= (ang1+ang2)/2;
+                fovGeo=Math.abs(dirGeo-ang1)
                 var dirOrig=p.dir
-                var fovTmp= Math.abs(dirTmp-ang1)
                 var refPtFirst=[(portB.lines[0][0]+portB.lines[1][0])/2,(portB.lines[0][1]+portB.lines[1][1])/2]
                 var posTmp=[(portO.lines[0][0]+portO.lines[1][0])/2,(portO.lines[0][1]+portO.lines[1][1])/2]
                 var pxOrig = p.x
@@ -443,20 +441,24 @@
                 posTmp[0]-=(p.y-refPtFirst[0])
                 posTmp[1]-=(p.x-refPtFirst[1])
 
-
-                
+                fov=ang1-p.dir
+                fov1=ang2-p.dir
+                var closeAhead=pointAhead()[1]
+                if(closeFlag && ((closeAhead[0]==portB.coords[0] && closeAhead[1]==portB.coords[1]) || (closeAhead[0]==portO.coords[0] && closeAhead[1]==portO.coords[1]))){
+                    OP('in')
+                    fov=Math.PI/4
+                    fov1=-Math.PI/4
+                }
                 p.y = posTmp[0]
                 p.x = posTmp[1]
                 p.pos=[p.y,p.x]
                 //p.dir=modAr(0-dirTmp)
-                fov=(ang1-p.dir)
-                fov1=(ang2-p.dir)
                 p.dir=modAr(p.dir+Math.PI)//temp
-                portGeo=true
-                geo=1
+                geo=true
+                OP('drawing')
                 draw(room[p.elevation].map,room[p.elevation].elevation)
                 ///// reset
-                portGeo=false
+                geo=false
                 fov=Math.PI/4
                 p.y=pyOrig
                 p.x=pxOrig
@@ -471,9 +473,8 @@
 
     function draw(floor,elevation){
         //Does the drawing for each floor
-        if (geo==1){
-            OP('in')
-            OP(fov)
+        if (geo){
+            
         }
         gloBool=false;
 
@@ -724,16 +725,13 @@
             //Takes the y and x modifiers of a point and returns true if the point is in vision and false otherwise
             yChange=j+y
             xChange=i+x
-            point=angleAround([yChange,xChange])+Math.PI*2
-            //geodebug
-            if (!geo){
-                return Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)) <= fov
+            point=angleAround([yChange,xChange])
+            if(geo){
+                //var geoAng=trigCorrect(Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)),'ang')
+                //return geoAng <=fov && geoAng>=fov1
+                return Math.acos(Math.cos(dirGeo)*Math.cos(point) + Math.sin(dirGeo)*Math.sin(point)) <= fovGeo
             }
-            else{
-                var ptvAng=Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point))
-                return ptvAng <= fov && ptvAng >=fov1
-            }
-            
+            return Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)) <= fov
         }
     }
 
@@ -744,13 +742,12 @@
         }
 
         var slopeLeft=-(Math.tan(modAr(p.dir+fov)))
+        var slopeRight
         if(geo){
-            var slopeRight=-(Math.tan(modAr(p.dir+fov1)))
-
+            slopeRight=-(Math.tan(modAr(p.dir+fov1)))
         }
         else{
-            var slopeRight=-(Math.tan(modAr(p.dir-fov)))
-
+            slopeRight=-(Math.tan(modAr(p.dir-fov)))
         }
         
         slopeLeft=trigCorrect(slopeLeft,'ang')
@@ -785,9 +782,11 @@
             
             if(xInt0In && xInt1In){
 				if(p.dir>Math.PI/2 && p.dir <(3*Math.PI/2)){
+
 					return [pt1[0],Math.min(xInt0,xInt1)]
 				}
 				else{
+
 					return [pt1[0],Math.max(xInt0,xInt1)]
 				}
             }
@@ -1107,14 +1106,19 @@
         if(Math.abs(angHold)>1){
             return true
         }
-        if (!geo){
-                return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang') <= fov
+        if(geo){
+            
+                var geoAng=trigCorrect(Math.acos(Math.cos(dirGeo+sideMod)*Math.cos(point) + Math.sin(dirGeo+sideMod)*Math.sin(point)),'ang')
+                return geoAng <=fovGeo
+                
+                //return point>=p.dir+fov1 && point<=p.dir+fov
             }
-        else{
-            var ptvAng=trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang') 
-            return ptvAng <= fov && ptvAng >=fov1
-        }
+        return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang')<= fov
     }
+
+
+
+
     //portdebug
     function pointAhead(){
         var yInt;

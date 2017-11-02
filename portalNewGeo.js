@@ -1,10 +1,9 @@
-//walls close to you on side disappear when fov is altered
-//brief disappearance of walls:
-//              0 b 0 0 o
-//              0 p->(facing right, strafing up through blue)  
-//              0
-//              0
-//              0
+//notepad
+
+//end button (play again)
+
+//comment out cgitb.enable when done
+
 
 
 (function() {
@@ -29,9 +28,9 @@
     var fadePerc=100
     var fadeCount=0
     var fov = Math.PI/4
-    var portGeo = false
-    var geo=0
-    var fov1
+    var geo=false
+    var dirGeo
+    var fovGeo
 
     //The following object contains information about the different types of blocks and methods which take point
     //modifiers as inputs while the player is moving and return true or false depending on what type of block it is
@@ -406,6 +405,7 @@
 				closeFlag=true;
 			}
 		}
+        
 	
 
 
@@ -427,15 +427,14 @@
 		}
     }
             //geodebug
-            //portGeo bool: hide close walls (350ish)
-            //              //ramps 165ish
             //y2-y1/x2-x1
-            if(portB.lines.length!=0 && portO.lines.length!=0){
-                var ang1 = angleAround(portB.lines[0]);
-                var ang2 = angleAround(portB.lines[1]);
-                var dirTmp= (ang1+ang2)/2;
+            if(portB.lines.length!=0 && portO.lines.length!=0 && ((pointVisible(portB.lines[0]) ||pointVisible(portB.lines[1])) || closeFlag ) ){
+                var ang1 = angleAround([portB.lines[0][0],portB.lines[0][1]+0.1]);
+                var ang2 = angleAround([portB.lines[1][0],portB.lines[1][1]-0.1]);
+                dirGeo= ((ang1+ang2)/2);
+                fovGeo=Math.abs(dirGeo-ang1)
+                dirGeo=modAr(dirGeo+Math.PI)
                 var dirOrig=p.dir
-                var fovTmp= Math.abs(dirTmp-ang1)
                 var refPtFirst=[(portB.lines[0][0]+portB.lines[1][0])/2,(portB.lines[0][1]+portB.lines[1][1])/2]
                 var posTmp=[(portO.lines[0][0]+portO.lines[1][0])/2,(portO.lines[0][1]+portO.lines[1][1])/2]
                 var pxOrig = p.x
@@ -443,20 +442,23 @@
                 posTmp[0]-=(p.y-refPtFirst[0])
                 posTmp[1]-=(p.x-refPtFirst[1])
 
-
-                
+                fov=ang1-p.dir
+                fov1=ang2-p.dir
+                var closeAhead=pointAhead()[1]
+                if(closeFlag && ((closeAhead[0]==portB.coords[0] && closeAhead[1]==portB.coords[1]) || (closeAhead[0]==portO.coords[0] && closeAhead[1]==portO.coords[1]))){
+                    fov=Math.PI/4
+                    fov1=-Math.PI/4
+                }
                 p.y = posTmp[0]
                 p.x = posTmp[1]
                 p.pos=[p.y,p.x]
                 //p.dir=modAr(0-dirTmp)
-                fov=(ang1-p.dir)
-                fov1=(ang2-p.dir)
                 p.dir=modAr(p.dir+Math.PI)//temp
-                portGeo=true
-                geo=1
+                geo=true
+                OP('drawing')
                 draw(room[p.elevation].map,room[p.elevation].elevation)
                 ///// reset
-                portGeo=false
+                geo=false
                 fov=Math.PI/4
                 p.y=pyOrig
                 p.x=pxOrig
@@ -471,9 +473,8 @@
 
     function draw(floor,elevation){
         //Does the drawing for each floor
-        if (geo==1){
-            OP('in')
-            OP(fov)
+        if (geo){
+            
         }
         gloBool=false;
 
@@ -724,16 +725,13 @@
             //Takes the y and x modifiers of a point and returns true if the point is in vision and false otherwise
             yChange=j+y
             xChange=i+x
-            point=angleAround([yChange,xChange])+Math.PI*2
-            //geodebug
-            if (!geo){
-                return Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)) <= fov
+            point=angleAround([yChange,xChange])
+            if(geo){
+                //var geoAng=trigCorrect(Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)),'ang')
+                //return geoAng <=fov && geoAng>=fov1
+                return Math.acos(Math.cos(dirGeo)*Math.cos(point) + Math.sin(dirGeo)*Math.sin(point)) <= fovGeo
             }
-            else{
-                var ptvAng=Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point))
-                return ptvAng <= fov && ptvAng >=fov1
-            }
-            
+            return Math.acos(Math.cos(p.dir)*Math.cos(point) + Math.sin(p.dir)*Math.sin(point)) <= fov
         }
     }
 
@@ -744,13 +742,12 @@
         }
 
         var slopeLeft=-(Math.tan(modAr(p.dir+fov)))
+        var slopeRight
         if(geo){
-            var slopeRight=-(Math.tan(modAr(p.dir+fov1)))
-
+            slopeRight=-(Math.tan(modAr(p.dir+fov1)))
         }
         else{
-            var slopeRight=-(Math.tan(modAr(p.dir-fov)))
-
+            slopeRight=-(Math.tan(modAr(p.dir-fov)))
         }
         
         slopeLeft=trigCorrect(slopeLeft,'ang')
@@ -785,9 +782,11 @@
             
             if(xInt0In && xInt1In){
 				if(p.dir>Math.PI/2 && p.dir <(3*Math.PI/2)){
+
 					return [pt1[0],Math.min(xInt0,xInt1)]
 				}
 				else{
+
 					return [pt1[0],Math.max(xInt0,xInt1)]
 				}
             }
@@ -851,21 +850,56 @@
     //funlineFromTo
     function lineFromTo(point1,point2,cornerList,fDist,elevation){
         // portdebug     portWall creation, fadeblack
+        OP('start')
         var portWall;
+        var portDraw=0;
+        var point1Tmp=point1;
+        var point2Tmp=point2;
+        var minSt
+        var maxSt
+        var point1OrigFloor//For blue outline modifier
+        var point2OrigFloor//
+        if(point1[0]==point2[0]){
+            minSt=Math.min(point1[1],point2[1])
+            maxSt=Math.max(point1[1],point2[1])
+            point1=[point1[0],minSt]
+            point2=[point1[0],maxSt]
+        }
+        if(point1[1]==point2[1]){
+            minSt=Math.min(point1[0],point2[0])
+            maxSt=Math.max(point1[0],point2[0])
+            point1=[minSt,point1[1]]
+            point2=[maxSt,point1[1]]
+        }
+        point1Orig=point1
+        point2Orig=point2
 
         portWall=pointAhead()[0];
 
         
         context.fillStyle=fadeBlack('FF','FF','FF');
-        if(inArray(point1,portWall) && inArray(point2,portWall) && p.elevation==elevation){
+        if((inArray(point1,portWall) && inArray(point2,portWall)) && p.elevation==elevation){
             context.fillStyle=fadeBlack('FF','00','00');
+            portDraw='r'
         }
-        if(inArray(point1,portO.lines) && inArray(point2,portO.lines) && p.elevation==elevation){
+        if((inArray(point1,portO.lines) && inArray(point2,portO.lines)) && p.elevation==elevation){
             context.fillStyle=fadeBlack('FF','A5','00');
+            portDraw='o'
             
         }
-        if(inArray(point1,portB.lines) && inArray(point2,portB.lines) && p.elevation==elevation){
-            context.fillStyle=fadeBlack('00','00','EE');
+        if((inArray(point1,portB.lines) || inArray(point2,portB.lines)) && p.elevation==elevation){
+            //context.fillStyle=fadeBlack('00','00','EE');
+            OP(portB.lines)
+            OP(point1)
+            OP(point2)
+            if(eqArray(point1,portB.lines[0]) && (point1[0]<point2[0]||point1[1]<point2[1])){
+                portDraw='b'
+                OP('in here1')
+            }
+            if(eqArray(point2,portB.lines[1]) && (point1[0]<point2[0]||point1[1]<point2[1])){
+                portDraw='b'
+                OP('in here2')
+            }
         }
         
 
@@ -883,9 +917,9 @@
         }
         var point1Y1=point1[0]
         var point1Y2=point1[1]
+        var point1X=point1[2]
         var point2Y1=point2[0]
         var point2Y2=point2[1]
-        var point1X=point1[2]
         var point2X=point2[2]
 
 
@@ -897,6 +931,74 @@
         context.lineTo(point2X, point2Y1);
         context.closePath();
         context.fill();
+
+        if (portDraw=='b'){
+            OP('in')
+            context.fillStyle=fadeBlack('00','00','EE');
+            context.beginPath();
+            context.moveTo(point1X, point1Y1);
+            context.lineTo(point1X, point1Y2);
+            context.lineTo(point2X, point2Y2);
+            context.lineTo(point2X, point2Y1);
+            context.closePath();
+            context.fill();
+            var xMin=Math.min(point1Orig[1],point2Orig[1])
+            if(Math.floor(point1Orig[1])==point1Orig[1]){
+                 point1OrigFloor=0.1
+            }
+            else{
+                point1OrigFloor=0.1-(Math.abs(point1Orig[1]-Math.floor(point1Orig[1])))
+                if(point1OrigFloor<0){
+                    point1OrigFloor=0
+                }
+            }
+            if(Math.floor(point2Orig[1])==point2Orig[1]){
+                 point2OrigFloor=0.1
+            }
+            else{
+                point2OrigFloor=0.1-(Math.abs(point2Orig[1]-Math.ceil(point2Orig[1])))
+                if(point2OrigFloor<0){
+                    point2OrigFloor=0
+                }
+            }
+            if (xMin==point1Orig[1]){
+                point1=cornerLineCoords([point1Orig[0],point1Orig[1]+point1OrigFloor],fDist)
+                point2=cornerLineCoords([point2Orig[0],point2Orig[1]-point2OrigFloor],fDist)
+            }
+            else{
+                point1=cornerLineCoords([point1Orig[0],point1Orig[1]-point1OrigFloor],fDist)
+                point2=cornerLineCoords([point2Orig[0],point2Orig[1]+point2OrigFloor],fDist)
+            }
+            point1Y1=point1[0]
+            point1Y2=point1[1]
+            point1X=point1[2]
+            point2Y1=point2[0]
+            point2Y2=point2[1]
+            point2X=point2[2]
+            context.fillStyle=fadeBlack('FF','FF','FF');
+            context.beginPath();
+            var xMin=Math.min(point1X,point2X)
+            var xMax=Math.max(point1X,point2X)
+            if(point1X==xMin){
+                var minY1=point1Y1
+                var minY2=point1Y2
+                var maxY1=point2Y1
+                var maxY2=point2Y2
+            }
+            else{
+                var minY1=point2Y1
+                var minY2=point2Y2
+                var maxY1=point1Y1
+                var maxY2=point1Y2
+            }
+
+            context.moveTo(xMin, minY1+((minY2-minY1)*0.1));
+            context.lineTo(xMin, minY2-((minY2-minY1)*0.1));
+            context.lineTo(xMax, maxY2-((maxY2-maxY1)*0.1));
+            context.lineTo(xMax, maxY1+((maxY2-maxY1)*0.1));
+            context.closePath();
+            context.fill();
+        }
         
         //top  
         if(elevation===room.length-1 || (room[elevation].map[jMin][iMin]===0 && room[elevation+1].map[jMin][iMin]===1)){
@@ -1107,14 +1209,17 @@
         if(Math.abs(angHold)>1){
             return true
         }
-        if (!geo){
-                return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang') <= fov
+        if(geo){
+                var geoAng=trigCorrect(Math.acos(Math.cos(dirGeo+sideMod)*Math.cos(point) + Math.sin(dirGeo+sideMod)*Math.sin(point)),'ang')
+                return geoAng <=fovGeo
+                //return point>=p.dir+fov1 && point<=p.dir+fov
             }
-        else{
-            var ptvAng=trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang') 
-            return ptvAng <= fov && ptvAng >=fov1
-        }
+        return trigCorrect(Math.acos(Math.cos(p.dir+sideMod)*Math.cos(point) + Math.sin(p.dir+sideMod)*Math.sin(point)),'ang')<= fov
     }
+
+
+
+
     //portdebug
     function pointAhead(){
         var yInt;
@@ -1371,6 +1476,17 @@
         return false;
     }
 
+    function eqArray(arr1,arr2){
+        if(arr1.length!=arr2.length){
+            return false
+        }
+        for(var iInArr=0; iInArr<arr1.length;iInArr++){
+            if(arr1[iInArr]!=arr2[iInArr]){
+                return false
+            }
+        }
+        return true
+    }
 
     function OP(conArg){
         if(globalCon){
