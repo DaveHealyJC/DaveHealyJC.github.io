@@ -1,4 +1,12 @@
 //closeflag
+//geo disappearing close to portals @ is orange
+//#################
+//##         #@@   #
+//##         #@@---#
+//##         #@@   #
+//##         #@@---#
+//##         #@@   #
+//#################     
 
 
 
@@ -433,67 +441,143 @@
             if(portB.lines.length!=0 && portO.lines.length!=0){
                 portGeo(portB,portO)
                 portGeo(portO,portB)
-
             }
 
 
 
             function portGeo(currPort,destPort){
-                if((pointVisible([currPort.lines[0][0],currPort.lines[0][1]+0.1]) || pointVisible([currPort.lines[1][0],currPort.lines[1][1]-0.1])) || (closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))) {
+                var xMod=0;
+                var yMod=0;
+                switch(currPort.orien){
+                    case 0:
+                        xMod=0.1;
+                        break;
+                    case 1:
+                        yMod=0.1;
+                        break
+                    case 2:
+                        xMod=0.1;
+                        break;
+                    case 3:
+                        yMod=0.1;
+                        break;
+                }
+                // swapsies ######### left to right
+                var geoPt1Tmp=[currPort.lines[0][0]+xMod,currPort.lines[0][1]+yMod]
+                var geoPt2Tmp=[currPort.lines[1][0]-xMod,currPort.lines[1][1]-yMod]
+                switch(currPort.orien){
+                    case 0:
+                        geoPt1=geoPt2Tmp
+                        geoPt2=geoPt1Tmp
+                        break
+                    case 1:
+                        geoPt1=geoPt1Tmp
+                        geoPt2=geoPt2Tmp
+                        break
+                    case 2:
+                        geoPt1=geoPt2Tmp
+                        geoPt2=geoPt1Tmp
+                        break
+                    case 3:
+                        geoPt1=geoPt2Tmp
+                        geoPt2=geoPt1Tmp
+                        break
+                }
+
                 
-                if((closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))){
-                    context.fillStyle = fadeBlack('00','00','CD');                         
-                    context.fillRect(0, 0, width, height/2);
-                    context.fillStyle = fadeBlack('7C','FC','00');
-                    context.fillRect(0, height/2, width, height/2);
+                OP('pts')
+                OP(geoPt1)
+                OP(geoPt2)
+                if((pointVisible(geoPt1) || pointVisible(geoPt2)) || (closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))) {
+                    if((closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))){
+                        context.fillStyle = fadeBlack('00','00','CD');                         
+                        context.fillRect(0, 0, width, height/2);
+                        context.fillStyle = fadeBlack('7C','FC','00');
+                        context.fillRect(0, height/2, width, height/2);
+                    }
+
+                    var ang1
+                    var ang2
+                    if(pointVisible(geoPt1)){
+                        ang1 = angleAround(geoPt1);
+                    }
+                    else{
+                        ang1=modAr(p.dir+Math.PI/4)
+                    }
+                    if(pointVisible(geoPt2)){
+                        ang2 = angleAround(geoPt2);
+                    }
+                    else{
+                        ang2=modAr(p.dir-Math.PI/4)
+                    }
+
+                    dirGeo= ((ang1+ang2)/2);
+                    fovGeo=Math.abs(dirGeo-ang1)
+                    if(fovGeo>Math.PI/4){
+                        fovGeo=Math.PI/4
+                    }
+                    var dirGeoMod=0
+
+                    var dirOrig=p.dir
+                    var refPtFirst=[(currPort.lines[0][0]+currPort.lines[1][0])/2,(currPort.lines[0][1]+currPort.lines[1][1])/2]
+                    var posTmp=[(destPort.lines[0][0]+destPort.lines[1][0])/2,(destPort.lines[0][1]+destPort.lines[1][1])/2]
+                    var pxOrig = p.x
+                    var pyOrig = p.y
+
+
+
+                    switch(currPort.orien-destPort.orien) {
+                    case 1:
+                        dirGeoMod=Math.PI/2;
+                        posTmp[0]-=(p.x-refPtFirst[1])
+                        posTmp[1]+=(p.y-refPtFirst[0])
+                        break;
+                    case -1:
+                        dirGeoMod=-Math.PI/2;
+                        posTmp[0]+=(p.x-refPtFirst[1])
+                        posTmp[1]-=(p.y-refPtFirst[0])
+                        break;
+                    case 0:
+                        dirGeoMod=Math.PI;
+                        posTmp[0]-=(p.y-refPtFirst[0])
+                        posTmp[1]-=(p.x-refPtFirst[1])
+                        break;
+                    case 2:
+                        posTmp[0]+=(p.y-refPtFirst[0])
+                        posTmp[1]+=(p.x-refPtFirst[1])
+                        break;
+                    case -2:
+                        posTmp[0]+=(p.y-refPtFirst[0])
+                        posTmp[1]+=(p.x-refPtFirst[1])
+                        break;
+                    case 3:
+                        dirGeoMod=-Math.PI/2;
+                        posTmp[0]+=(p.x-refPtFirst[1])
+                        posTmp[1]-=(p.y-refPtFirst[0])
+                        break;
                 }
 
-                var ang1
-                var ang2
-                if(pointVisible([currPort.lines[0][0],currPort.lines[0][1]+0.1])){
-                    ang1 = angleAround([currPort.lines[0][0],currPort.lines[0][1]+0.1]);
-                }
-                else{
-                    ang1=modAr(p.dir+Math.PI/4)
-                }
-                if(pointVisible([currPort.lines[1][0],currPort.lines[1][1]-0.1])){
-                    ang2 = angleAround([currPort.lines[1][0],currPort.lines[1][1]-0.1]);
-                }
-                else{
-                    ang2=modAr(p.dir-Math.PI/4)
-                }
+                    dirGeo=modAr(dirGeo+dirGeoMod)//ch
 
-                dirGeo= ((ang1+ang2)/2);
-                fovGeo=Math.abs(dirGeo-ang1)
-                if(fovGeo>Math.PI/4){
-                    fovGeo=Math.PI/4
-                }
-                dirGeo=modAr(dirGeo+Math.PI)//ch
-                var dirOrig=p.dir
-                var refPtFirst=[(currPort.lines[0][0]+currPort.lines[1][0])/2,(currPort.lines[0][1]+currPort.lines[1][1])/2]
-                var posTmp=[(destPort.lines[0][0]+destPort.lines[1][0])/2,(destPort.lines[0][1]+destPort.lines[1][1])/2]
-                var pxOrig = p.x
-                var pyOrig = p.y
-                posTmp[0]-=(p.y-refPtFirst[0])
-                posTmp[1]-=(p.x-refPtFirst[1])
 
-                fov=fovGeo
 
-                p.y = posTmp[0]
-                p.x = posTmp[1]
-                p.pos=[p.y,p.x]
-                //p.dir=modAr(0-dirTmp)
-                p.dir=modAr(p.dir+Math.PI)//temp
-                geo=true
-                OP('drawing')
-                draw(room[p.elevation].map,room[p.elevation].elevation)
-                ///// reset
-                geo=false
-                fov=Math.PI/4
-                p.y=pyOrig
-                p.x=pxOrig
-                p.pos=[p.y,p.x]
-                p.dir=dirOrig
+                    fov=fovGeo
+
+                    p.y = posTmp[0]
+                    p.x = posTmp[1]
+                    p.pos=[p.y,p.x]
+                    //p.dir=modAr(0-dirTmp)
+                    p.dir=modAr(p.dir+dirGeoMod)//temp
+                    geo=true
+                    OP('drawing')
+                    draw(room[p.elevation].map,room[p.elevation].elevation)
+                    ///// reset
+                    geo=false
+                    fov=Math.PI/4
+                    p.y=pyOrig
+                    p.x=pxOrig
+                    p.pos=[p.y,p.x]
+                    p.dir=dirOrig
                 }
             }
 
@@ -928,7 +1012,7 @@
         
         context.fillStyle=fadeBlack('FF','FF','FF');
         if((inArray(point1,portWall) && inArray(point2,portWall)) && p.elevation==elevation){
-            //context.fillStyle=fadeBlack('FF','00','00');
+            context.fillStyle=fadeBlack('FF','00','00');
             portDraw='r'
         }
 

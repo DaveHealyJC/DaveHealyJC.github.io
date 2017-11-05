@@ -1,8 +1,4 @@
-//notepad
-
-//end button (play again)
-
-//comment out cgitb.enable when done
+//closeflag
 
 
 
@@ -159,6 +155,7 @@
         mapContext.lineTo(width,height);
         mapContext.lineTo(width,0);
         mapContext.stroke();
+
 
 
         //This if/else alters the players elevation if they are standing on a ramp(which is '2' on the 2d array maps)
@@ -345,6 +342,10 @@
                 }
             }
         }
+        pElev=Math.floor(p.elevation);
+        room[pElev].warp(p.pos,pElev);
+        pElev=Math.floor(p.elevation);
+        floor=room[pElev].map;
 
 
 		//if the player is so close to a wall that they can only see that wall and coordinates inside that block,
@@ -428,11 +429,122 @@
     }
             //geodebug
             //y2-y1/x2-x1
-            if(portB.lines.length!=0 && portO.lines.length!=0 && ((pointVisible(portB.lines[0]) ||pointVisible(portB.lines[1])) || closeFlag ) ){
-                var ang1 = angleAround([portB.lines[0][0],portB.lines[0][1]+0.1]);
-                var ang2 = angleAround([portB.lines[1][0],portB.lines[1][1]-0.1]);
+
+            if(portB.lines.length!=0 && portO.lines.length!=0){
+                portGeo(portB,portO)
+                portGeo(portO,portB)
+
+            }
+
+
+
+            function portGeo(currPort,destPort){
+                if((pointVisible([currPort.lines[0][0],currPort.lines[0][1]+0.1]) || pointVisible([currPort.lines[1][0],currPort.lines[1][1]-0.1])) || (closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))) {
+                
+                if((closeFlag&&(inArray(currPort.lines[0],pointAhead()[0]) && inArray(currPort.lines[1],pointAhead()[0])))){
+                    context.fillStyle = fadeBlack('00','00','CD');                         
+                    context.fillRect(0, 0, width, height/2);
+                    context.fillStyle = fadeBlack('7C','FC','00');
+                    context.fillRect(0, height/2, width, height/2);
+                }
+                OP('inportgeo')
+
+                var ang1
+                var ang2
+                if(pointVisible([currPort.lines[0][0],currPort.lines[0][1]+0.1])){
+                    ang1 = angleAround([currPort.lines[0][0],currPort.lines[0][1]+0.1]);
+                }
+                else{
+                    ang1=modAr(p.dir+Math.PI/4)
+                }
+                if(pointVisible([currPort.lines[1][0],currPort.lines[1][1]-0.1])){
+                    ang2 = angleAround([currPort.lines[1][0],currPort.lines[1][1]-0.1]);
+                }
+                else{
+                    ang2=modAr(p.dir-Math.PI/4)
+                }
+
                 dirGeo= ((ang1+ang2)/2);
                 fovGeo=Math.abs(dirGeo-ang1)
+                if(fovGeo>Math.PI/4){
+                    fovGeo=Math.PI/4
+                }
+                dirGeo=modAr(dirGeo+Math.PI)
+                var dirOrig=p.dir
+                var refPtFirst=[(currPort.lines[0][0]+currPort.lines[1][0])/2,(currPort.lines[0][1]+currPort.lines[1][1])/2]
+                var posTmp=[(destPort.lines[0][0]+destPort.lines[1][0])/2,(destPort.lines[0][1]+destPort.lines[1][1])/2]
+                var pxOrig = p.x
+                var pyOrig = p.y
+                posTmp[0]-=(p.y-refPtFirst[0])
+                posTmp[1]-=(p.x-refPtFirst[1])
+
+                fov=fovGeo
+
+                p.y = posTmp[0]
+                p.x = posTmp[1]
+                p.pos=[p.y,p.x]
+                //p.dir=modAr(0-dirTmp)
+                p.dir=modAr(p.dir+Math.PI)//temp
+                geo=true
+                OP('drawing')
+                draw(room[p.elevation].map,room[p.elevation].elevation)
+                ///// reset
+                geo=false
+                fov=Math.PI/4
+                p.y=pyOrig
+                p.x=pxOrig
+                p.pos=[p.y,p.x]
+                p.dir=dirOrig
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+            if((pointVisible([portB.lines[0][0],portB.lines[0][1]+0.1]) || pointVisible([portB.lines[1][0],portB.lines[1][1]-0.1])) || (closeFlag&&(inArray(portB.lines[0],pointAhead()[0]) && inArray(portB.lines[1],pointAhead()[0])))) {
+                
+                if((closeFlag&&(inArray(portB.lines[0],pointAhead()[0]) && inArray(portB.lines[1],pointAhead()[0])))){
+                    context.fillStyle = fadeBlack('00','00','CD');                         
+                    context.fillRect(0, 0, width, height/2);
+                    context.fillStyle = fadeBlack('7C','FC','00');
+                    context.fillRect(0, height/2, width, height/2);
+                }
+
+                var ang1
+                var ang2
+                if(pointVisible([portB.lines[0][0],portB.lines[0][1]+0.1])){
+                    ang1 = angleAround([portB.lines[0][0],portB.lines[0][1]+0.1]);
+                }
+                else{
+                    ang1=modAr(p.dir+Math.PI/4)
+                }
+                if(pointVisible([portB.lines[1][0],portB.lines[1][1]-0.1])){
+                    ang2 = angleAround([portB.lines[1][0],portB.lines[1][1]-0.1]);
+                }
+                else{
+                    ang2=modAr(p.dir-Math.PI/4)
+                }
+
+                dirGeo= ((ang1+ang2)/2);
+                fovGeo=Math.abs(dirGeo-ang1)
+                if(fovGeo>Math.PI/4){
+                    fovGeo=Math.PI/4
+                }
                 dirGeo=modAr(dirGeo+Math.PI)
                 var dirOrig=p.dir
                 var refPtFirst=[(portB.lines[0][0]+portB.lines[1][0])/2,(portB.lines[0][1]+portB.lines[1][1])/2]
@@ -442,13 +554,8 @@
                 posTmp[0]-=(p.y-refPtFirst[0])
                 posTmp[1]-=(p.x-refPtFirst[1])
 
-                fov=ang1-p.dir
-                fov1=ang2-p.dir
-                var closeAhead=pointAhead()[1]
-                if(closeFlag && ((closeAhead[0]==portB.coords[0] && closeAhead[1]==portB.coords[1]) || (closeAhead[0]==portO.coords[0] && closeAhead[1]==portO.coords[1]))){
-                    fov=Math.PI/4
-                    fov1=-Math.PI/4
-                }
+                fov=fovGeo
+
                 p.y = posTmp[0]
                 p.x = posTmp[1]
                 p.pos=[p.y,p.x]
@@ -465,7 +572,24 @@
                 p.pos=[p.y,p.x]
                 p.dir=dirOrig
             }
+            */
+/*
+            //geodebug 750x550
+        for(var gridi=0;gridi<=750;gridi+=50){
+            context.beginPath();
+            context.moveTo(0, gridi);
+            context.lineTo(750, gridi);
+            context.stroke();
 
+        }
+        for(var gridj=0;gridj<=750;gridj+=50){
+            context.beginPath();
+            context.moveTo(gridj, 0);
+            context.lineTo(gridj, 550);
+            context.stroke();
+
+        }
+*/
 
     }
 
@@ -516,7 +640,6 @@
                                 lineList.push([[j+1,i+1],partial([j+1,i+1],[j+1,i])])
                             }                             
                         }
-
                         else if (ptv(y,0)===ptv(y,x) && ptv(y,0) ===true){
                             if (perpDistance([j+1,i])>perpDistance([j+1,i+1])){
                                 lineList.push([[j+1,i],[j+1,i+1]])
@@ -526,6 +649,7 @@
                             }
                         }
                     }
+
                     if (pti(0,0)===0 && pti(0,x)!==0 && p.pos[1]>i+1){
                         if(ptv(0,x)!=ptv(y,x)){
 
@@ -589,6 +713,27 @@
                                 }
                         }
                     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                     //ceilings and floors     //>0.5?
@@ -657,9 +802,6 @@
                 }
             }
         }
-        
-
-
 
 
         for (iSweep=0;iSweep<distList.length;iSweep++){
@@ -741,12 +883,14 @@
             return(pt2)
         }
 
-        var slopeLeft=-(Math.tan(modAr(p.dir+fov)))
+        var slopeLeft
         var slopeRight
         if(geo){
-            slopeRight=-(Math.tan(modAr(p.dir+fov1)))
+            slopeLeft=-(Math.tan(modAr(dirGeo+fovGeo)))
+            slopeRight=-(Math.tan(modAr(dirGeo-fovGeo)))
         }
         else{
+            slopeLeft=-(Math.tan(modAr(p.dir+fov)))
             slopeRight=-(Math.tan(modAr(p.dir-fov)))
         }
         
@@ -850,7 +994,6 @@
     //funlineFromTo
     function lineFromTo(point1,point2,cornerList,fDist,elevation){
         // portdebug     portWall creation, fadeblack
-        OP('start')
         var portWall;
         var portDraw=0;
         var point1Tmp=point1;
@@ -879,26 +1022,24 @@
         
         context.fillStyle=fadeBlack('FF','FF','FF');
         if((inArray(point1,portWall) && inArray(point2,portWall)) && p.elevation==elevation){
-            context.fillStyle=fadeBlack('FF','00','00');
+            //context.fillStyle=fadeBlack('FF','00','00');
             portDraw='r'
         }
-        if((inArray(point1,portO.lines) && inArray(point2,portO.lines)) && p.elevation==elevation){
-            context.fillStyle=fadeBlack('FF','A5','00');
-            portDraw='o'
-            
+
+        if((inArray(point1,portO.lines) || inArray(point2,portO.lines)) && p.elevation==elevation){
+            if(eqArray(point1,portO.lines[0]) && (point1[0]<point2[0]||point1[1]<point2[1])){
+                portDraw='o'
+            }
+            if(eqArray(point2,portO.lines[1]) && (point1[0]<point2[0]||point1[1]<point2[1])){
+                portDraw='o'
+            }
         }
         if((inArray(point1,portB.lines) || inArray(point2,portB.lines)) && p.elevation==elevation){
-            //context.fillStyle=fadeBlack('00','00','EE');
-            OP(portB.lines)
-            OP(point1)
-            OP(point2)
             if(eqArray(point1,portB.lines[0]) && (point1[0]<point2[0]||point1[1]<point2[1])){
                 portDraw='b'
-                OP('in here1')
             }
             if(eqArray(point2,portB.lines[1]) && (point1[0]<point2[0]||point1[1]<point2[1])){
                 portDraw='b'
-                OP('in here2')
             }
         }
         
@@ -932,9 +1073,13 @@
         context.closePath();
         context.fill();
 
-        if (portDraw=='b'){
-            OP('in')
-            context.fillStyle=fadeBlack('00','00','EE');
+        if (portDraw=='b' || portDraw=='o'){
+            if (portDraw=='b'){
+                context.fillStyle=fadeBlack('00','CC','CC');
+            }
+            if (portDraw=='o'){
+                context.fillStyle=fadeBlack('FF','A5','00');
+            }
             context.beginPath();
             context.moveTo(point1X, point1Y1);
             context.lineTo(point1X, point1Y2);
@@ -991,11 +1136,21 @@
                 var maxY1=point1Y1
                 var maxY2=point1Y2
             }
-
-            context.moveTo(xMin, minY1+((minY2-minY1)*0.1));
-            context.lineTo(xMin, minY2-((minY2-minY1)*0.1));
+            context.beginPath();
+            context.fillStyle = fadeBlack('7C','FC','00');
+            context.moveTo(xMin, minY2-((minY2-minY1)*0.1));
             context.lineTo(xMax, maxY2-((maxY2-maxY1)*0.1));
+            context.lineTo(xMax, height/2);
+            context.lineTo(xMin, height/2);
+            context.closePath();
+            context.fill();
+
+            context.beginPath();
+            context.fillStyle = fadeBlack('00','00','CD');
+            context.moveTo(xMin, minY1+((minY2-minY1)*0.1));
             context.lineTo(xMax, maxY1+((maxY2-maxY1)*0.1));
+            context.lineTo(xMax, height/2);
+            context.lineTo(xMin, height/2);
             context.closePath();
             context.fill();
         }
@@ -1433,14 +1588,17 @@
         mapContext.closePath();
         mapContext.stroke();
         //
+        mapContext.strokeStyle = 'black';
+        mapContext.fillStyle = 'black';
+        /*
         mapContext.lineWidth=1;
         mapContext.fillStyle = 'orange';
-        mapContext.strokeStyle = 'black';
         mapContext.beginPath();
         mapContext.arc(p.x*150/gameSizeI,p.y*150/gameSizeJ,150/gameSizeI,0,2*Math.PI);
         mapContext.fill();
         mapContext.stroke();
         mapContext.fillStyle = 'black';
+        */
         /*
         mapContext.strokeStyle = 'red';
         for (y = 0; y < gameSizeJ; y++) {
