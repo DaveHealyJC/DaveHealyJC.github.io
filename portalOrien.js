@@ -6,7 +6,10 @@
 //##         #@@   #
 //##         #@@---#
 //##         #@@   #
-//#################     
+//#################  
+
+
+//  other faces acting as portal
 
 
 
@@ -467,8 +470,8 @@
                 var geoPt2Tmp=[currPort.lines[1][0]-xMod,currPort.lines[1][1]-yMod]
                 switch(currPort.orien){
                     case 0:
-                        geoPt1=geoPt2Tmp
-                        geoPt2=geoPt1Tmp
+                        geoPt1=geoPt1Tmp
+                        geoPt2=geoPt2Tmp
                         break
                     case 1:
                         geoPt1=geoPt1Tmp
@@ -1012,7 +1015,7 @@
         
         context.fillStyle=fadeBlack('FF','FF','FF');
         if((inArray(point1,portWall) && inArray(point2,portWall)) && p.elevation==elevation){
-            context.fillStyle=fadeBlack('FF','00','00');
+            //context.fillStyle=fadeBlack('FF','00','00');
             portDraw='r'
         }
 
