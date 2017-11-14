@@ -1,0 +1,51 @@
+
+body,header {
+    margin:0;
+    background-color:black;
+    font-family: Courier, sans-serif;
+    color: #22B14C;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas: "top-left top-right"
+                         "bottom-left bottom-right"
+}
+
+#bestYet {
+    background-color:white;
+    font-size:0.8em;
+    grid-area: top-left;
+    margin: 0;
+    border-style: solid;
+    border-color: #22B14C;
+    padding-left:1em;
+    margin-bottom:0;
+}
+
+#bestInGen {
+    background-color:white;
+	font-size:0.8em;
+    grid-area: bottom-left;
+    margin: 0;
+    border-style: solid;
+    border-color: #22B14C;
+    padding-left:1em;
+    margin-bottom:0;
+}
+
+#stats {
+    grid-area: top-right;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+#graph {
+    grid-area: bottom-right;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: auto;
+}

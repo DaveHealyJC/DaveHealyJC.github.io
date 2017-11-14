@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Sales</title>       
+        <link rel="stylesheet" href="sales.css">
+        <script src="sales.js"></script>
+    </head>
+    <body>
+        <section id='bestInGen'>
+        	<canvas id='bestInGenCan' width="400" height="400">
+            </canvas>
+        </section>
+        <section id='bestYet'>
+        	<canvas id='bestYetCan' width="400" height="400">
+            </canvas>
+        </section>
+        <section id='stats'>
+        	<p>
+	        <label for="popField">Enter a population size: </label><input type="text" id="popField" class="popField" value="1000">
+	        </p>
+	        <p>
+	        <label for="mutField">Enter a mutation chance(%): </label><input type="text" id="mutField" class="mutField" value="4">
+	        </p>
+	        <p>
+	        <label for="speedField">Speed: </label><input type="text" id="speedField" class="speedField" value="1">
+	        </p>
+	        <input type="checkbox" id="home"> Place home city?
+	        <p class='genField'>Generation:</p>
+            <p class='avgField'>AvgFitness:</p>
+        	<p class='topField'>TopFitness:</p>
+            <input type="submit" value="Start" class="startBut">
+        	<input type="submit" value="Reset" class="resetBut">
+        </section>
+        <section id='graph'>
+            <canvas id='graphCan' width="500" height="500">
+            </canvas>
+        </section>
+    </body>
+</html>         
+
+
