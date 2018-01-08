@@ -1,0 +1,93 @@
+<NOTE TO GITHUB: This readme was written with the intention of being submitted to my Web Development lecturer alongside the 
+project for marking.>
+
+Some of the stuff in this text file might not be that relevant but figured I'd write it anyway 
+for some extra context. 
+
+The picture readme.jpeg explains the very basic workings of the geometry and 
+how it is displayed. It doesn't go into very much detail at all (ignores looking from different angles, partial walls 
+where you only see part of it, floors/cielings/ramps, drawing different floors that you are not on, the various checks 
+to determine where exactly the walls are, how walls/floors that are closer to you block walls behind etc.) but I thought 
+I would include it as a lot of people have been asking me how it works and it gives a nice start.
+
+Not sure if you saw it in my lab 5 challenge submission, 
+but I made a map with moving walls where the walls follow the rules of 'Conway's Game of Life'. 
+I wanted to have a room like this in the final version but didn't get around to implementing it.
+I don't expect to get any kind of credit for this or anything as it wasn't included in the final handup 
+but wanted to mention it as it sort of shows how versitile the engine is.
+http://cs1.ucc.ie/~doh2/cgi-bin/lab5/walkinconway.html (Note: Very early version of the engine. 
+can only turn at 90 degree angles and turning causes the walls to change positions)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Server-side~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Authentication:
+There is no admin accounts or anything like that. You can create your own user account from 
+the register link (Just remember that passwords need at least one lowercase letter, at 
+least one uppercase letter and one number)
+
+Instead of my login and register pages displaying an index of links after authentication 
+through self processing as your examples in the lectures, they instead redirect to the 
+main page with the game using the following code:
+
+##redirBool starts as false and is set to true after valid authentication
+if redirBool==False:
+	##print usual login/register html with sticky forms with the appropriate error message, if any
+else:
+    print("Location:late.py")
+    print()
+
+
+In the logout page, I use a js script (called reDir.js) to redirect to the index page after 10 seconds
+
+In the score.py file, AJAX is used to add the score and username to the database, as well as 
+adding information about the maze that was randomly generated. The total maze information is then retrieved 
+to python where the maximum, minimum and averages are calculated regarding the size and number of 
+junctions that have ever been recorded. The end screen then uses javascript to display these 
+figures and the stats of the maze that had just been generated so the player can compare and 
+see how difficult their maze was.
+
+convert.py is a py I wrote which performs the flip -u command on .py files so that I could 
+work on serverside programming from home on my windows laptop (yuck!). For the final submission 
+I took no chances and manually did flip -u to everything in the WGB labs in case convert.py had 
+some strange oversight that I had not yet noticed.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Client-side~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are still some graphical glitches with the ramps depending on what direction you face while 
+going up or down them. The ramps and floors/ceilings(to a lesser degree) were the most complex part 
+of the game engine (Withtout going too much into it, all measurements for surfaces are taken in the 2D x-y plane 
+which makes vertical surfaces like walls easy to map out as all you need are two points but for non verticle surfaces 
+the same approach wouldn't work.). 
+Besides that, there are some very minor graphical glitches 
+mainly regarding lines lining up and connecting correctly when viewed from a distance (mostly due to 
+internal rounding errors after trigonometry e.g. instead of exactly 45 degrees, you may get 44.999999 
+which can cause some surprising problems. Solution may be to go back over everything and use Math.round 
+more I think but there are other times where it's required that an angle cannot be a multiple of 45 or 90)
+
+As discussed in the final Thursday lab, I divided my javascript into two files. The original reason 
+was because the 2-dimensional arrays which stored the maps of each room took up a huge part of my code 
+without actually having much substance to them so I wanted to keep them seperate. I eventually 
+decided to turn the map of each room into an array of objects in which each object is the map of 
+a single floor with a method that handles "warping" from one room to another (In order to improve 
+performance, only the room you are in is loaded/drawn/rendered and the warping handles the seemless 
+transition between new rooms).
+
+The maze in the O'Rahilly building section is (pseudo) randomly generated using a recursive algorithm I wrote. 
+If you search maps.js for "function mazeGen" (or function mazeRec for the recursive part) you can find it. 
+I could have gone online and found a proper maze algorithm (I had a look afterwards) but I thought it 
+would be fun to try it out myself (It was!). As a result the generated mazes aren't super imaginative 
+and if you choose the correct direction at the start it's possible that you might solve it very fast, 
+but it was good practice for me. I designed the exit to that room to pass above the maze so that even 
+if the maze is solved quickly, the player can see it from above where it looks more chaotic.
+
+The fade to black at the end is obtained by defining all my colours in RGB hex form. Each value is 
+converted from a string to the hex number and multiplied by a variable "percFade" which starts at 100/100 (1)
+ and then converted back into a string to feed into the fillStyle method. While percfade is 100%, the rgb values 
+do not change but as soon as the end zone is reached, percFade decrements every two frames. This means that every colour 
+regardless of how close to #000000 it is will fade to black in the same time taking different "speeds" depending on how 
+close to black they are at the start. (try positioning yourself so you can see the blue sky, green floor, red bridge and 
+white walls to verify this). Once fadePerc reaches 0, the end of the game is triggered.
+
+DOM is used to put the display style of the game canvas to "none" at the end and also to display the text/table/image 
+that appears after this. Search for "htmlInfo" in walk.js to see this.

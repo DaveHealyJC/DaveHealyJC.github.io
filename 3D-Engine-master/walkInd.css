@@ -1,0 +1,62 @@
+
+body,header {
+    margin:0;
+    background-color:black;
+    font-family: Courier, sans-serif;
+    color: #22B14C;
+}
+header{
+    margin-left:auto;
+    margin-right:auto;
+    width:70%;
+    border: 0.3em solid #22B14C;
+    border-radius: 2em 8em 2em 8em;
+    background-color:#0000CD;
+    /*padding-left: 5em;
+    /*padding-bottom: 10em;*/
+    /*text-indent: 2em;*/
+}
+#hing1{
+    font-weight:bold;
+    font-size:3em;
+    margin-left:15%;
+    margin-right:20%;
+    margin-bottom:0;
+    margin-top:0.25em;
+}
+#hing2{
+    font-size:1.5em;
+    margin-left:25%;
+    font-style:oblique;
+    margin-right:auto;
+    margin-top:0;
+}
+form,.pwInf{
+    margin-left:15%;
+    margin-bottom:0;
+}
+input,input:focus {
+    margin-right:2em;
+    margin-top:0.5em;
+    font-family: Courier, sans-serif;
+    border: 0.25em solid #22B14C;
+    background-color:black;
+    color:red;
+    outline:none;
+}
+input[type=submit] {
+    font-weight:bold;
+    border: 0.25em solid #22B14C;
+    background-color:red;
+    color:black;
+}
+
+form[action="register.py"]{
+    margin-top:0;
+}
+
+img{
+    display: block;
+    margin: 0 auto;
+    margin-top:2em;
+}
