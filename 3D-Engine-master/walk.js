@@ -1762,7 +1762,7 @@
         resInfo.appendChild(replayButton);
 
         replayButton.addEventListener ("click", function() {
-            window.location = "http://cs1.ucc.ie/~doh2/cgi-bin/lab7/late.html";
+            window.location = "https://davehealyjc.github.io/3D-Engine-master/late.html";
         });
 
         resInfo.style.textAlign='center';
