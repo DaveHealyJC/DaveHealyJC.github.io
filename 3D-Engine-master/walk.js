@@ -171,33 +171,10 @@
             fadeCount=(fadeCount+1)%2
             if (fadeCount===0){
                 if (fadePerc>0){
-                    fadePerc--;
+                    fadePerc=fadePerc-2;
                 }
-                else if(fadePerc===0){
-                    var request;    
+                else{   
                     clearInterval(playInterval);     
-                    var username = document.querySelector('.username');         
-                    var url = 'score.py?score='+timerDisp.innerHTML+'&username='+username.innerHTML+'&spaces='+totalSpaces+'&turns='+totalTurns;
-                    request = new XMLHttpRequest();
-                    request.addEventListener('readystatechange', handle_response, false);
-                    request.open('GET', url, true);
-                    request.send(null);
-
-                        
-                    function handle_response() {
-                        if ( request.readyState === 4 ) {
-                            if ( request.status === 200 ) {
-                                if ( request.responseText.trim() !== 'error' ) {
-                                    str=request.responseText.trim()
-                                    res=str.split(" ");
-                                }
-                            }
-                        }
-                    }
-
-
-
-
 
                     globalImgInd=7
                     imgDisp(imgArray[7].src,context,canvas,timeBool)
